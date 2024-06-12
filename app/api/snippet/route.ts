@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSnippet, readAllSnippet } from "./service";
 
-export async function GET(){
-    return NextResponse.json(await readAllSnippet())
+export async function GET(req:NextRequest){
+    const filters = Object.fromEntries(req.nextUrl.searchParams)
+    console.log("***", filters)
+    return NextResponse.json(await readAllSnippet(filters))
 }
 
 export async function POST(req: NextRequest) {
