@@ -5,7 +5,8 @@ const publicRoutes = createRouteMatcher([
     // Add public routes here    
     "/sign-in",
     "/sign-up",
-    "/api/snippet"
+    "/api/snippet",
+    "/api/snippet/(.*)"
 ]);
 
 // Apply Clerk middleware
