@@ -3,10 +3,11 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 // Define public routes
 const publicRoutes = createRouteMatcher([
     // Add public routes here    
-    "/sign-in",
-    "/sign-up",
+    "/sign-in(.*)",
+    "/sign-up(.*)",
     "/api/snippet",
     "/api/snippet/(.*)"
+    
 ]);
 
 // Apply Clerk middleware

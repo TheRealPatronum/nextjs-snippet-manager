@@ -1,6 +1,10 @@
-import { readAllSnippet } from '@/app/api/snippet/service'
-import { db } from '@/app/lib/db'
-export default async function MainPage(p: {}) {
+import SnippetSearch from '@/app/components/SnippetSearch/SnippetSearch'
+
+export default function MainPage(p: {}) {
   // const snippets = await readAllSnippet()
-  return <div className="text-white">Todo</div>
+  return (
+    <div>
+      <SnippetSearch placeholder={`Search your snippets`} />
+    </div>
+  )
 }
