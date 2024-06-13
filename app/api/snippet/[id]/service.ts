@@ -1,6 +1,7 @@
 import { Language, Snippet, Technology } from "@prisma/client";
 import { db } from "@/app/lib/db";
 import { z } from "zod";
+import { auth } from "@clerk/nextjs/server";
 
 
 const updateSnippetSchema = z.object({
@@ -15,6 +16,7 @@ export async function updateSnippet(
   body: Partial<Omit<Snippet, "id">>
 ) {
   try {
+    if(!auth().userId){return {error:true,status:401,message:"you must be signed in"}}
     updateSnippetSchema.parse(body)
     const updatedSnippet = await db.snippet.update({
       data: body,
@@ -35,6 +37,7 @@ export async function updateSnippet(
 const deleteSnippetSchema = z.number()
 
 export async function deleteSnippet(id: number) {
+  if(!auth().userId){return {error:true,status:401,message:"you must be signed in"}}
   try {
     deleteSnippetSchema.parse(id)
     const deletedSnippet = await db.snippet.delete({

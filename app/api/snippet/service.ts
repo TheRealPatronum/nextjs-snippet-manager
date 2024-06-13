@@ -1,4 +1,5 @@
 import {db}from "@/app/lib/db"
+import { auth } from "@clerk/nextjs/server"
 import { Language, Snippet, Technology } from "@prisma/client"
 import {z} from "zod"
 
@@ -7,10 +8,11 @@ const readAllSnippetSchema = z.object({
   content: z.string().optional(),
   language:z.nativeEnum(Language).optional(),
   technology:z.nativeEnum(Technology).optional()
-})
+}).optional()
 
 
-export async function readAllSnippet(filters:Partial<Snippet>){
+export async function readAllSnippet(filters?:Partial<Snippet>){
+  if(!auth().userId){return {error:true,status:401,message:"you must be signed in"}}
   try {
   readAllSnippetSchema.parse(filters)
    return await db.snippet.findMany({where:{... filters}}) 
@@ -31,6 +33,7 @@ export async function readAllSnippet(filters:Partial<Snippet>){
   })
 
 export async function createSnippet(body: Omit<Snippet, "id">) {
+  if(!auth().userId){return {error:true,status:401,message:"you must be signed in"}}
     try {
       createSnippetSchema.parse(body)
       const snippetCreated = await db.snippet.create({ data: body });
