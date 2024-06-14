@@ -14,18 +14,27 @@ const updateSnippetSchema = z.object({
 
 export async function updateSnippet(
   id: number,
-  body: Partial<Omit<Snippet, "id">>
+  body: typeof updateSnippetSchema._type
 ) {
+  const { userId } = auth();
+  if (!userId) {
+    return {
+      data: null,
+      error: true,
+      status: 401,
+      message: "You must be signed in",
+    };
+  }
   try {
-    if(!auth().userId){return {error:true,status:401,message:"you must be signed in"}}
-    updateSnippetSchema.parse(body)
+    updateSnippetSchema.parse(body);
     const updatedSnippet = await db.snippet.update({
       data: body,
-      where: { id },
+      where: { id, userId },
     });
-    return updatedSnippet;
+    return { data: updatedSnippet };
   } catch (err) {
     return {
+      data: null,
       error: true,
       status: 500,
       message:
