@@ -41,7 +41,7 @@ export default function SnippetCard(p: { snippet: Snippet }) {
   )
   return (
     <Link
-      href="#"
+      href={`/snippets/${p.snippet.id}`}
       className="block shadow-xl bg-main-900 h-52 w-60 rounded-3xl transition transform hover:scale-105"
     >
       <div className="overflow-hidden relative rounded-tl-3xl h-full w-full">
