@@ -12,12 +12,18 @@ const readAllSnippetSchema = z.object({
 
 
 export async function readAllSnippet(filters?:Partial<Snippet>){
-  if(!auth().userId){return {error:true,status:401,message:"you must be signed in"}}
+  const {userId} = auth()
+  if(!userId){return { data:[],error:true,status:401,message:"you must be signed in"}}
   try {
   readAllSnippetSchema.parse(filters)
-   return await db.snippet.findMany({where:{... filters}}) 
+
+   const snippets =  await db.snippet.findMany({where:{... filters, userId:userId}}) 
+   return {
+    data:snippets
+   }
   } catch (err){
     return {
+      data:[],
       error: true,
       status: 500,
       message:
