@@ -1,3 +1,4 @@
+"use server"
 import {db}from "@/app/lib/db"
 import { auth } from "@clerk/nextjs/server"
 import { Language, Snippet, Technology } from "@prisma/client"
@@ -38,14 +39,16 @@ export async function readAllSnippet(filters?:Partial<Snippet>){
     technology:z.nativeEnum(Technology)
   })
 
-export async function createSnippet(body: Omit<Snippet, "id">) {
-  if(!auth().userId){return {error:true,status:401,message:"you must be signed in"}}
+export async function createSnippet(body: typeof createSnippetSchema._type) {
+  const {userId}= auth()
+  if(!userId){return {data:null,error:true,status:401,message:"you must be signed in"}}
     try {
       createSnippetSchema.parse(body)
-      const snippetCreated = await db.snippet.create({ data: body });
-      return snippetCreated;
+      const snippetCreated = await db.snippet.create({ data: {...body, userId} });
+      return {data: snippetCreated}
     } catch (err) {
       return {
+        data:null,
         error: true,
         status: 500,
         message:

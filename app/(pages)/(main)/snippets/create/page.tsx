@@ -5,6 +5,9 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import FieldError from '@/app/components/FieldError/FieldError'
+import { createSnippet } from '@/app/api/snippet/service'
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
 const formSchema = z.object({
   title: z
@@ -23,6 +26,7 @@ const formSchema = z.object({
 type Form = typeof formSchema._type
 
 export default function CreateSnippetPage(p: {}) {
+  const router = useRouter()
   const {
     register,
     handleSubmit,
@@ -31,8 +35,16 @@ export default function CreateSnippetPage(p: {}) {
     resolver: zodResolver(formSchema),
   })
 
-  function submit(formData: Form) {
-    alert(JSON.stringify(formData))
+  async function submit(formData: Form) {
+    const { error } = await createSnippet({
+      ...formData,
+      language: SNIPPETS_METADATA[formData.technology].language,
+    })
+    if (!error) {
+      toast.success('snippet created succesfully')
+      router.push('/')
+      router.refresh()
+    }
   }
 
   const technoSelect = (
