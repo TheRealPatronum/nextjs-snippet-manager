@@ -30,7 +30,11 @@ export default function Header(p: {}) {
           onClick={toggleLanguage}
         />
         <div className="w-12">
-          <UserButton />
+          <UserButton
+            afterSignOutUrl={
+              '/' + locale + process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL
+            }
+          />
         </div>
       </div>
     </header>
