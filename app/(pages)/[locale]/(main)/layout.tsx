@@ -1,5 +1,5 @@
+import Header from '@/app/components/Header/Header'
 import Nav from '@/app/components/Nav/Nav'
-import Header from '../../components/Header/Header'
 
 export default function MainLayout({
   children,

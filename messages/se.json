@@ -1,0 +1,10 @@
+{
+    "main":{
+     "snippets":{
+         "create":{
+             "title":"Skapa en kodsnippet"
+         }
+     },
+     "searchPlaceholder":"Sök efter kodsnippet"
+    } 
+ }
