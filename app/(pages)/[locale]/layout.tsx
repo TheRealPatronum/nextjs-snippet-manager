@@ -6,6 +6,8 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'sonner'
 import { frFR, svSE, enUS } from '@clerk/localizations'
+import { getMessages } from 'next-intl/server'
+import { NextIntlClientProvider } from 'next-intl'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,12 +21,15 @@ const clerkI18n = {
   en: enUS,
   se: svSE,
 }
-export default function RootLayout(
+
+export default async function RootLayout(
   p: Readonly<{
     children: React.ReactNode
     params: { locale: 'en' | 'fr' | 'se' }
   }>,
 ) {
+  const messages = await getMessages()
+
   return (
     <ClerkProvider
       localization={clerkI18n[p.params.locale]}
@@ -36,8 +41,10 @@ export default function RootLayout(
     >
       <html lang={p.params.locale}>
         <body className={inter.className}>
-          <Toaster richColors />
-          {p.children}
+          <NextIntlClientProvider messages={messages}>
+            <Toaster richColors />
+            {p.children}
+          </NextIntlClientProvider>
         </body>
       </html>
     </ClerkProvider>

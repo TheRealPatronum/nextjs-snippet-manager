@@ -20,13 +20,15 @@ const isPublicRoutes = createRouteMatcher([
     "/api/snippet/(.*)",
     "/:locales/sign-in(.*)",
     "/:locales/sign-up(.*)",
-    "/api/:path*"    
+    "/api/:path*",    
+    "/:locales"
 ]);
 
 // Apply Clerk middleware
 export default clerkMiddleware((auth, req) => {
-  if (!isPublicRoutes(req))auth().protect();
-
+  if (!isPublicRoutes(req)) {
+    auth().protect();
+}
   return intlMiddleware(req);
 });
 
